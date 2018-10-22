@@ -1,9 +1,15 @@
-// import Item from './Item';
+import Item from './Item';
 import React from 'react';
 
 export default function List(props) {
-  const { list } = props;
+  const { miniList } = props;
+  console.log(props);
   return (
-    list.map(item => (<div>{item.id}</div>))
-    )
+    miniList.map(single => (
+      <Item 
+        single={single}
+        key={single.id}
+      />
+    ))
+  )
 };

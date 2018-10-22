@@ -2,9 +2,10 @@ import React from 'react';
 
 export default (props)=>{
   console.log('card', props);
+  const { total, completed, handleGroupSelect } = props;
   return(
     
-    <div>{props.total} Total tasks, {props.completed} completed</div>
+    <div onClick={handleGroupSelect}>{total} Total tasks, {completed} completed</div>
     
   )
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { payload } from './data/data';
-// import List from './List';
+import List from './List';
 import Default from './Default';
 
 class App extends Component {
@@ -8,15 +8,15 @@ class App extends Component {
     super(props);
     this.state={
       view: 'default',
-      taskGroups: [],
       data: [],
     };
     this.countGroupTasks = this.countGroupTasks.bind(this);
     this.countGroupCompleted = this.countGroupCompleted.bind(this);
+    this.handleGroupSelect = this.handleGroupSelect.bind(this);
   }
 
   tasksToState(payload) {
-    this.setState({ data: payload }, () => {console.log(this.state)});
+    this.setState({ data: payload });
   }
 
   componentDidMount() {
@@ -47,9 +47,21 @@ class App extends Component {
     return count;
   }
 
-  render() {
+  createMiniList(groupName) {
     const { data } = this.state;
-    const { view } = this.state;
+    return data.filter( (item) => {
+      return (item.group === groupName)
+    });
+  }
+
+  handleGroupSelect(e) {
+    e.preventDefault();
+    console.log('inside groupselector');
+    console.log(e.target.id);
+  }
+
+  render() {
+    const { data, view } = this.state;
 
     if (!data) {
       return (
@@ -62,9 +74,17 @@ class App extends Component {
           data={data}
           countGroupCompleted={this.countGroupCompleted}
           countGroupTasks={this.countGroupTasks}
+          handleGroupSelect={this.handleGroupSelect}
         />
       )
-    }   
+    }
+    
+    let miniList = this.createMiniList(view);
+    return (
+      <List
+      miniList={miniList}
+      />
+    ) 
   }
 }
 
