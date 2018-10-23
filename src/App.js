@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { payload } from './data/data';
-// import List from './List';
+import List from './List';
 import Default from './Default';
 
 class App extends Component {
@@ -8,19 +8,79 @@ class App extends Component {
     super(props);
     this.state={
       view: 'default',
-      taskGroups: [],
       data: [],
+      lists: [],
     };
     this.countGroupTasks = this.countGroupTasks.bind(this);
     this.countGroupCompleted = this.countGroupCompleted.bind(this);
-  }
-
-  tasksToState(payload) {
-    this.setState({ data: payload }, () => {console.log(this.state)});
+    this.handleGroupSelect = this.handleGroupSelect.bind(this);
+    this.handleTaskClick = this.handleTaskClick.bind(this);
+    this.taskIsUnlocked = this.taskIsUnlocked.bind(this);
   }
 
   componentDidMount() {
-    this.tasksToState(payload);
+    // In practice, query the db to set initial state
+    // In this coding challenge, I am using the provided hardcoded data.
+    this.setState({ data: payload })
+  }
+
+  handleTaskClick(e, task) {
+    // When a task is clicked:
+    // check if it is unlocked
+    // if unlocked, update completedAt
+    e.preventDefault();
+    let { data } = this.state;
+    let currentList = this.state.data;
+    if (!this.taskIsUnlocked(task, currentList)) {
+      return;
+    }
+
+    console.log(task);
+    for (let idx = 0; idx < data.length; idx++) {
+      if (data[idx].id === task) {
+        if (data[idx].completedAt === null) {
+          data[idx].completedAt = new Date();
+          this.setState({ data: data });
+          return;
+        } else {
+          data[idx].completedAt = null;
+          this.setState({ data: data });
+          return;
+        }
+      }
+    }
+  }
+
+  taskIsUnlocked(taskId, taskList) {
+    // Return true if task is unlocked
+    // Return false if it is locked
+    // Sure there's a nested for loop.
+    taskList = taskList || this.state.data;
+    let task = null;
+    for (let idx = 0; idx < taskList.length; idx++) {
+      if (taskList[idx].id === taskId) {
+        task = taskList[idx];
+      }
+    }
+    let dependentTaskIds = task.dependencyIds;
+    if (dependentTaskIds.length === 0) {
+      return true;
+    }
+
+    // Get a list of uncompleted dependent tasks
+    let dependentTaskObjects = taskList.filter((task)=>{
+      return ((dependentTaskIds.includes(task.id)) && (task.completedAt === null));
+    })
+    // for each id in the dependent IDs, see if any of them are unfinished
+    for (let idx = 0; idx < dependentTaskIds.length; idx++) {
+      let currentId = dependentTaskIds[idx];
+      for (let j = 0; j < dependentTaskObjects.length; j++) {
+        if (dependentTaskObjects[j].id === currentId) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   countGroupTasks(groupName) {
@@ -47,10 +107,20 @@ class App extends Component {
     return count;
   }
 
-  render() {
+  createMiniList(groupName) {
     const { data } = this.state;
-    const { view } = this.state;
+    return data.filter( (item) => {
+      return (item.group === groupName)
+    });
+  } 
 
+  handleGroupSelect(e, value) {
+    e.preventDefault();
+    this.setState({ view: value })
+  }
+
+  render() {
+    const { data, view } = this.state;
     if (!data) {
       return (
         <div>Add some tasks!</div>
@@ -62,11 +132,23 @@ class App extends Component {
           data={data}
           countGroupCompleted={this.countGroupCompleted}
           countGroupTasks={this.countGroupTasks}
+          handleGroupSelect={this.handleGroupSelect}
         />
       )
-    }   
+    }
+    
+    let miniList = this.createMiniList(view);
+    return (
+      <List
+      handleTaskClick={this.handleTaskClick}
+      miniList={miniList}
+      name={'default'}
+      handleGroupSelect={this.handleGroupSelect}
+      taskIsUnlocked={this.taskIsUnlocked}
+      />
+    ) 
   }
-}
+} 
 
 export default App;
 

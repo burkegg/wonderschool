@@ -2,21 +2,25 @@ import React from 'react';
 import DefaultCard from './DefaultCard';
 
 export default (props) => {
-  const { countGroupCompleted, countGroupTasks, data } = props;
+  const { countGroupCompleted, countGroupTasks, data, handleGroupSelect } = props;
   let groupNames = [];
   for (let idx = 0; idx < data.length; idx++) {
     if (!groupNames.includes(data[idx].group)) {
       groupNames.push(data[idx].group);
     }
   }
-  console.log(groupNames);
   return(
-    groupNames.map((name) => {
+    groupNames.map((name, idx) => {
       let total = countGroupTasks(name);
       let completed = countGroupCompleted(name);
-      return (<DefaultCard total={total} completed={completed} />)
+      return (
+        <DefaultCard
+          name={name}
+          total={total}
+          completed={completed}
+          handleGroupSelect={handleGroupSelect}
+          key={idx}
+        />)
     })
   )
 }
-
-
