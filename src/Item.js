@@ -3,46 +3,69 @@ import styled from 'styled-components';
 
 const StyledLocked = styled.div`
   font-size: 1.5em;
-  text-align: center;
+  text-align: left;
   color: grey;
-  height: 50;
-  width: 200;
+  height: 80px;
 `;
 
 const StyledUnlocked = styled.div`
   font-size: 1.5em;
-  text-align: center;
+  text-align: left;
   color: black;
-  height: 50;
-  width: 200;
+  height: 80px;
 `;
+
+const Completed = styled(StyledUnlocked)`
+  text-decoration: line-through;
+`;
+
+const Break = styled.hr`
+  width: 500px;
+  background-color: grey;
+  height: 1px;
+  border-top: .5px grey
+  margin-bottom: 15px;
+  margin-top: 0px;
+`;
+
+const Checkbox = styled.img`
+  padding-right: 20px;
+  padding-left: 10px;
+`;
+
+const LockImg = styled.img`
+  padding-right: 29px;
+  padding-left: 10px;
+`;
+
 
 export default function Item(props) {
   const { single, handleTaskClick, taskIsUnlocked } = props;
   const id = single.id;
 
   if (!taskIsUnlocked(single.id)){
-    console.log('locked');
     return (
     <StyledLocked
     id={id}
     onClick={(e) => {handleTaskClick(e, id)}}
     >
-      <img src='./icons/locked.svg' alt='locked icon' />
-      {single.task}__{id}
+      <LockImg src='./icons/locked.svg' alt='locked icon' />
+      {single.task}
+      <Break></Break>
     </StyledLocked>
   )
   }
 
   if (single.completedAt !== null){
     return (
-    <StyledUnlocked
+    <Completed
     id={id} 
     onClick={(e) => {handleTaskClick(e, id)}}
     >
-      <img src='./icons/completed.svg' alt='completed icon' />
-      {single.task}__{id}
-    </StyledUnlocked>
+      <Checkbox src='./icons/completed.svg' alt='completed icon' />
+      {single.task}
+      <Break></Break>
+    </Completed>
   )
   } else {
     return (
@@ -50,8 +73,9 @@ export default function Item(props) {
     id={id} 
     onClick={(e) => {handleTaskClick(e, id)}}
     >
-      <img src='./icons/incomplete.svg' alt='completed icon' />
-      {single.task}__{id}
+      <Checkbox src='./icons/incomplete.svg' alt='completed icon' />
+      {single.task}
+      <Break></Break>
     </StyledUnlocked>
   )
   } 

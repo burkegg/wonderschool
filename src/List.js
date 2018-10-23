@@ -1,13 +1,12 @@
 import Item from './Item';
 import React from 'react';
 import styled from 'styled-components';
-
-const ListTopBar = styled.div`
   
+const ListTopBar = styled.div`
   font-size: 2em;
   text-align: left;
   color: black;
-  height: 50;
+  height: 80px;
 `;
 
 const ReturnView = styled.span `

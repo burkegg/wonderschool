@@ -26,8 +26,8 @@ class App extends Component {
 
   handleTaskClick(e, task) {
     // When a task is clicked:
-    // check if it is unlocked
-    // if unlocked, update completedAt
+    // check whether it is unlocked
+    // if unlocked, update completedAt with date or null
     e.preventDefault();
     let { data } = this.state;
     let currentList = this.state.data;
@@ -35,7 +35,6 @@ class App extends Component {
       return;
     }
 
-    console.log(task);
     for (let idx = 0; idx < data.length; idx++) {
       if (data[idx].id === task) {
         if (data[idx].completedAt === null) {
