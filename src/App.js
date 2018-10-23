@@ -9,18 +9,78 @@ class App extends Component {
     this.state={
       view: 'default',
       data: [],
+      lists: [],
     };
     this.countGroupTasks = this.countGroupTasks.bind(this);
     this.countGroupCompleted = this.countGroupCompleted.bind(this);
     this.handleGroupSelect = this.handleGroupSelect.bind(this);
-  }
-
-  tasksToState(payload) {
-    this.setState({ data: payload });
+    this.handleTaskClick = this.handleTaskClick.bind(this);
+    this.taskIsUnlocked = this.taskIsUnlocked.bind(this);
   }
 
   componentDidMount() {
-    this.tasksToState(payload);
+    // In practice, query the db to set initial state
+    // In this coding challenge, I am using the provided hardcoded data.
+    this.setState({ data: payload })
+  }
+
+  handleTaskClick(e, task) {
+    // When a task is clicked:
+    // check if it is unlocked
+    // if unlocked, update completedAt
+    e.preventDefault();
+    let { data } = this.state;
+    let currentList = this.state.data;
+    if (!this.taskIsUnlocked(task, currentList)) {
+      return;
+    }
+
+    console.log(task);
+    for (let idx = 0; idx < data.length; idx++) {
+      if (data[idx].id === task) {
+        if (data[idx].completedAt === null) {
+          data[idx].completedAt = new Date();
+          this.setState({ data: data });
+          return;
+        } else {
+          data[idx].completedAt = null;
+          this.setState({ data: data });
+          return;
+        }
+      }
+    }
+  }
+
+  taskIsUnlocked(taskId, taskList) {
+    // Return true if task is unlocked
+    // Return false if it is locked
+    // Sure there's a nested for loop.
+    taskList = taskList || this.state.data;
+    let task = null;
+    for (let idx = 0; idx < taskList.length; idx++) {
+      if (taskList[idx].id === taskId) {
+        task = taskList[idx];
+      }
+    }
+    let dependentTaskIds = task.dependencyIds;
+    if (dependentTaskIds.length === 0) {
+      return true;
+    }
+
+    // Get a list of uncompleted dependent tasks
+    let dependentTaskObjects = taskList.filter((task)=>{
+      return ((dependentTaskIds.includes(task.id)) && (task.completedAt === null));
+    })
+    // for each id in the dependent IDs, see if any of them are unfinished
+    for (let idx = 0; idx < dependentTaskIds.length; idx++) {
+      let currentId = dependentTaskIds[idx];
+      for (let j = 0; j < dependentTaskObjects.length; j++) {
+        if (dependentTaskObjects[j].id === currentId) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   countGroupTasks(groupName) {
@@ -52,17 +112,15 @@ class App extends Component {
     return data.filter( (item) => {
       return (item.group === groupName)
     });
-  }
+  } 
 
-  handleGroupSelect(e) {
+  handleGroupSelect(e, value) {
     e.preventDefault();
-    console.log('inside groupselector');
-    console.log(e.target.id);
+    this.setState({ view: value })
   }
 
   render() {
     const { data, view } = this.state;
-
     if (!data) {
       return (
         <div>Add some tasks!</div>
@@ -82,11 +140,15 @@ class App extends Component {
     let miniList = this.createMiniList(view);
     return (
       <List
+      handleTaskClick={this.handleTaskClick}
       miniList={miniList}
+      name={'default'}
+      handleGroupSelect={this.handleGroupSelect}
+      taskIsUnlocked={this.taskIsUnlocked}
       />
     ) 
   }
-}
+} 
 
 export default App;
 

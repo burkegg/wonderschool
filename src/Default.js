@@ -14,7 +14,8 @@ export default (props) => {
       let total = countGroupTasks(name);
       let completed = countGroupCompleted(name);
       return (
-        <DefaultCard 
+        <DefaultCard
+          name={name}
           total={total}
           completed={completed}
           handleGroupSelect={handleGroupSelect}
