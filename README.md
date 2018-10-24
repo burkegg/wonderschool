@@ -15,7 +15,7 @@ I assumed that we would want the following use cases:
 
 1:  Get all tasks (including dependent tasks) by user id.\
 2:  Get all dependent tasks by task id.\
-3:  Get all tasks by task-group name.\
+3:  Get all tasks by task-group name.
 
 The tasks table has indices added on userID and task group name (group), to speed up searches.
 
