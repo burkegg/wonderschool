@@ -10,25 +10,19 @@ CREATE TABLE users (
   PRIMARY KEY(id)
 );
 
-CREATE TABLE lists (
-  id int NOT NULL AUTO_INCREMENT,
-  userID int NOT NULL,
-  FOREIGN KEY(userID) REFERENCES users(id),
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE items (
+CREATE TABLE tasks (
   id INT NOT NULL AUTO_INCREMENT,
   todotext VARCHAR(200) NOT NULL,
   completedAt date DEFAULT NULL,
   userID int NOT NULL,
+  group VARCHAR(200) NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY(userID) REFERENCES users(id)
 );
 
 -- I am adding an index to speed up searches by userID
 ALTER TABLE items ADD INDEX idx_userID (userID);
-
+ALTER TABLE items ADD INDEX idx_group (group);
 
 -- This table is added to allow a many to many 
 -- relationship between a task and its dependencies.

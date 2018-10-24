@@ -8,3 +8,19 @@ To do list.
 5:  Your browser should automatically open to localhost:3000.
 
 
+## Database design:
+
+I assumed that we would want the following use cases:
+
+1:  Get all tasks (including dependent tasks) by user id.
+2:  Get all dependent tasks by task id.
+3:  Get all tasks by task-group name.
+
+The tasks table has indices added on userID and task group name (group), to speed up searches.
+
+There is a join table called dependencies.  This will have tasks stored as taskID, and dependencies stored as dependencyID.  This is to allow faster queries for dependent tasks.  This would not be necessary in the initial project's scope, but it seems like a nice thing to have, and a likely topic of conversation in an interview.
+
+## API design:
+
+
+

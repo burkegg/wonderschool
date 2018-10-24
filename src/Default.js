@@ -16,20 +16,23 @@ export default (props) => {
       groupNames.push(data[idx].group);
     }
   }
+  console.log('groupNames', groupNames);
   return(
 
     <div>
     <TopDefault>Things to do</TopDefault>
     {groupNames.map((name, idx) => {
-      let total = countGroupTasks(name);
-      let completed = countGroupCompleted(name);
+      
+      // console.log('inside map', name, total, completed);
       return (
         <DefaultCard
           name={name}
-          total={total}
-          completed={completed}
+          // total={total}
+          // completed={completed}
           handleGroupSelect={handleGroupSelect}
           key={idx}
+          countGroupCompleted={countGroupCompleted}
+          countGroupTasks={countGroupTasks}
         />
         )
     })}

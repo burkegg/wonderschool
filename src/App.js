@@ -99,10 +99,11 @@ class App extends Component {
     let count = 0;
     const { data } = this.state;
     for (let idx = 0; idx < data.length; idx++) {
-      if (data[idx].completedAt !== null) {
+      if ((data[idx].completedAt !== null) && (data[idx].group === groupName)) {
         count += 1;
       }
     }
+    console.log(groupName, count);
     return count;
   }
 

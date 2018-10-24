@@ -21,7 +21,10 @@ const DefaultSVG = styled.img`
 `;
 
 export default (props)=>{
-  const { total, completed, handleGroupSelect, name } = props;
+  const { countGroupTasks, countGroupCompleted, handleGroupSelect, name } = props;
+    let total = countGroupTasks(name);
+    let completed = countGroupCompleted(name);
+    console.log('card name', name)
   return(
     
     <Card 
