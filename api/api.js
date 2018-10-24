@@ -80,3 +80,5 @@ Request payload format: text/plain
 This uses the parameters userID and taskID to perform a delete query on the database.
 
 Success: Returns a 200 status
+Error response: if the request payload is invalid, respond with a 400 status.
+Error response: if the database sends an error, respond with a 500 status.
