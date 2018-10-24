@@ -17,7 +17,6 @@ const Description = styled.div`
 const DefaultSVG = styled.img`
   padding-left: 10px;
   padding-right: 20px;
-
 `;
 
 export default (props)=>{
